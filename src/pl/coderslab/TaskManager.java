@@ -1,6 +1,7 @@
 package pl.coderslab;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -43,7 +44,6 @@ public class TaskManager {
                     break;
             }
         }
-        System.out.println(Arrays.toString(tasks[0]));
         updateTasks(tasksFile, tasks);
         System.out.println(ConsoleColors.RED + "Bye, bye.");
     }
@@ -75,8 +75,14 @@ public class TaskManager {
     public static String[][] removeTask(String[][] tasks) {
         Scanner scn = new Scanner(System.in);
         System.out.println("Pleas select row number to remove:");
-        int recordToRemove = scn.nextInt();
-        String[][] toReturn = ArrayUtils.remove(tasks, recordToRemove);
+        String input = scn.next();
+
+        while (validateTaskNumber(input, tasks)) {
+            System.out.println("Incorrect argument passed. Please give number greater or equal 0:");
+            input = scn.next();
+        }
+
+        String[][] toReturn = ArrayUtils.remove(tasks, Integer.parseInt(input));
         System.out.println("Record was successfully removed");
         return toReturn;
     }
@@ -122,6 +128,14 @@ public class TaskManager {
             e.printStackTrace();
         }
         return tasksTab;
+    }
+
+    public static boolean validateTaskNumber(String string, String [][] tab) {
+        boolean toReturn = true;
+        if (NumberUtils.isDigits(string) && NumberUtils.isParsable(string) && Integer.parseInt(string) >= 0 && (Integer.parseInt(string) < tab.length)) {
+            toReturn = false;
+        }
+        return toReturn;
     }
 
     public static int rowCounter(File tasksFile) {
