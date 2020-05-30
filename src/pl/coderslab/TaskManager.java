@@ -4,13 +4,17 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class TaskManager {
 
+
     public static void main(String[] args) {
-        String[][] tasks = tasks();
+        File tasksFile = new File("./src/pl/coderslab/tasks.csv");
+        String[][] tasks = tasks(tasksFile);
         Scanner scn = new Scanner(System.in);
         String userInput = null;
         menu();
@@ -39,6 +43,9 @@ public class TaskManager {
                     break;
             }
         }
+        System.out.println(Arrays.toString(tasks[0]));
+        updateTasks(tasksFile, tasks);
+        System.out.println(ConsoleColors.RED + "Bye, bye.");
     }
 
     public static String[] addTask() {
@@ -69,9 +76,25 @@ public class TaskManager {
         Scanner scn = new Scanner(System.in);
         System.out.println("Pleas select row number to remove:");
         int recordToRemove = scn.nextInt();
-        String [][] toReturn = ArrayUtils.remove(tasks, recordToRemove);
+        String[][] toReturn = ArrayUtils.remove(tasks, recordToRemove);
         System.out.println("Record was successfully removed");
         return toReturn;
+    }
+
+    public static void updateTasks(File tasksFile, String[][] tasksTab) {
+
+        try {
+            FileWriter fileWriter = new FileWriter(tasksFile, false);
+            for (int i = 0; i < tasksTab.length; i++) {
+                for (int j = 0; j < tasksTab[i].length; j++) {
+                    fileWriter.append(tasksTab[i][j]).append(";");
+                }
+                fileWriter.append("\n");
+            }
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void menu() {
@@ -86,8 +109,8 @@ public class TaskManager {
         }
     }
 
-    private static String[][] tasks() {
-        File tasksFile = new File("./src/pl/coderslab/tasks.csv");
+    private static String[][] tasks(File tasksFile) {
+
         String[][] tasksTab = new String[rowCounter(tasksFile)][3];
         try {
             Scanner scn = new Scanner(tasksFile);
