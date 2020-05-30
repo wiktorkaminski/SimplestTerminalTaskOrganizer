@@ -12,16 +12,17 @@ import java.util.Scanner;
 
 public class TaskManager {
 
+    private static String[][] tasks;
 
     public static void main(String[] args) {
         File tasksFile = new File("./src/pl/coderslab/tasks.csv");
-        String[][] tasks = tasks(tasksFile);
+        tasks = tasks(tasksFile);
         Scanner scn = new Scanner(System.in);
-        String userInput = null;
+        String userInput;
         menu();
         userInput = scn.nextLine();
         while (!userInput.toLowerCase().equals("exit")) {
-            switch (userInput) {
+            switch (userInput.toLowerCase()) {
                 case "add":
                     tasks = Arrays.copyOf(tasks, tasks.length + 1);
                     tasks[tasks.length - 1] = addTask();
@@ -29,12 +30,12 @@ public class TaskManager {
                     userInput = scn.nextLine();
                     break;
                 case "remove":
-                    tasks = Arrays.copyOf(removeTask(tasks), tasks.length - 1);
+                    tasks = Arrays.copyOf(removeTask(), tasks.length - 1);
                     menu();
                     userInput = scn.nextLine();
                     break;
                 case "list":
-                    listTasks(tasks);
+                    listTasks();
                     menu();
                     userInput = scn.nextLine();
                     break;
@@ -44,7 +45,7 @@ public class TaskManager {
                     break;
             }
         }
-        updateTasks(tasksFile, tasks);
+        updateTasks(tasksFile);
         System.out.println(ConsoleColors.RED + "Bye, bye.");
     }
 
@@ -60,24 +61,24 @@ public class TaskManager {
         return newTask;
     }
 
-    public static void listTasks(String[][] tasksTab) {
+    public static void listTasks() {
         StringBuilder taskList = new StringBuilder();
-        for (int i = 0; i < tasksTab.length; i++) {
+        for (int i = 0; i < tasks.length; i++) {
             taskList.append(i).append(" : ");
-            for (int j = 0; j < tasksTab[i].length; j++) {
-                taskList.append(tasksTab[i][j]).append(" ");
+            for (int j = 0; j < tasks[i].length; j++) {
+                taskList.append(tasks[i][j]).append(" ");
             }
             taskList.append("\n");
         }
         System.out.print(taskList.toString());
     }
 
-    public static String[][] removeTask(String[][] tasks) {
+    public static String[][] removeTask() {
         Scanner scn = new Scanner(System.in);
         System.out.println("Pleas select row number to remove:");
         String input = scn.next();
 
-        while (validateTaskNumber(input, tasks)) {
+        while (validateTaskNumber(input)) {
             System.out.println("Incorrect argument passed. Please give number greater or equal 0:");
             input = scn.next();
         }
@@ -87,13 +88,13 @@ public class TaskManager {
         return toReturn;
     }
 
-    public static void updateTasks(File tasksFile, String[][] tasksTab) {
+    public static void updateTasks(File tasksFile) {
 
         try {
             FileWriter fileWriter = new FileWriter(tasksFile, false);
-            for (int i = 0; i < tasksTab.length; i++) {
-                for (int j = 0; j < tasksTab[i].length; j++) {
-                    fileWriter.append(tasksTab[i][j]).append(";");
+            for (int i = 0; i < tasks.length; i++) {
+                for (int j = 0; j < tasks[i].length; j++) {
+                    fileWriter.append(tasks[i][j]).append(";");
                 }
                 fileWriter.append("\n");
             }
@@ -130,9 +131,9 @@ public class TaskManager {
         return tasksTab;
     }
 
-    public static boolean validateTaskNumber(String string, String [][] tab) {
+    public static boolean validateTaskNumber(String string) {
         boolean toReturn = true;
-        if (NumberUtils.isDigits(string) && NumberUtils.isParsable(string) && Integer.parseInt(string) >= 0 && (Integer.parseInt(string) < tab.length)) {
+        if (NumberUtils.isDigits(string) && NumberUtils.isParsable(string) && Integer.parseInt(string) >= 0 && (Integer.parseInt(string) < tasks.length)) {
             toReturn = false;
         }
         return toReturn;
