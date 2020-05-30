@@ -27,23 +27,20 @@ public class TaskManager {
                     tasks = Arrays.copyOf(tasks, tasks.length + 1);
                     tasks[tasks.length - 1] = addTask();
                     menu();
-                    userInput = scn.nextLine();
                     break;
                 case "remove":
                     tasks = Arrays.copyOf(removeTask(), tasks.length - 1);
                     menu();
-                    userInput = scn.nextLine();
                     break;
                 case "list":
                     listTasks();
                     menu();
-                    userInput = scn.nextLine();
                     break;
                 default:
                     System.out.println("Please select a correct option.");
-                    userInput = scn.nextLine();
                     break;
             }
+            userInput = scn.nextLine();
         }
         updateTasks(tasksFile);
         System.out.println(ConsoleColors.RED + "Bye, bye.");
@@ -57,7 +54,12 @@ public class TaskManager {
         System.out.println("Please add task due date:");
         newTask[1] = scnAdd.nextLine();
         System.out.println("Is your task important: true/false");
-        newTask[2] = scnAdd.nextLine();
+        String inputTF = scnAdd.next();
+        while (!(inputTF.toLowerCase().equals("true") || inputTF.toLowerCase().equals("false"))) {
+            System.out.println("Correct phrase is true or false. Choose corect option.");
+            inputTF = scnAdd.next();
+        }
+        newTask[2] = inputTF;
         return newTask;
     }
 
