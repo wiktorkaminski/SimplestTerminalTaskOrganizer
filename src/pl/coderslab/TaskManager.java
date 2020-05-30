@@ -1,5 +1,7 @@
 package pl.coderslab;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -21,9 +23,11 @@ public class TaskManager {
                     menu();
                     userInput = scn.nextLine();
                     break;
-//                case "remove":
-//                    removeTask();
-//                    break;
+                case "remove":
+                    tasks = Arrays.copyOf(removeTask(tasks), tasks.length - 1);
+                    menu();
+                    userInput = scn.nextLine();
+                    break;
                 case "list":
                     listTasks(tasks);
                     menu();
@@ -46,7 +50,6 @@ public class TaskManager {
         newTask[1] = scnAdd.nextLine();
         System.out.println("Is your task important: true/false");
         newTask[2] = scnAdd.nextLine();
-//        scnAdd.close();
         return newTask;
     }
 
@@ -60,6 +63,15 @@ public class TaskManager {
             taskList.append("\n");
         }
         System.out.print(taskList.toString());
+    }
+
+    public static String[][] removeTask(String[][] tasks) {
+        Scanner scn = new Scanner(System.in);
+        System.out.println("Pleas select row number to remove:");
+        int recordToRemove = scn.nextInt();
+        String [][] toReturn = ArrayUtils.remove(tasks, recordToRemove);
+        System.out.println("Record was successfully removed");
+        return toReturn;
     }
 
     public static void menu() {
