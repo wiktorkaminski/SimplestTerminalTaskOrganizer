@@ -56,7 +56,7 @@ public class TaskManager {
         System.out.println("Is your task important: true/false");
         String inputTF = scnAdd.next();
         while (!(inputTF.toLowerCase().equals("true") || inputTF.toLowerCase().equals("false"))) {
-            System.out.println("Correct phrase is true or false. Choose corect option.");
+            System.out.println("Correct phrase is true or false. Choose correct option.");
             inputTF = scnAdd.next();
         }
         newTask[2] = inputTF;
@@ -118,7 +118,7 @@ public class TaskManager {
         }
     }
 
-    private static String[][] tasks(File tasksFile) {
+    public static String[][] tasks(File tasksFile) {
 
         String[][] tasksTab = new String[rowCounter(tasksFile)][3];
         try {
