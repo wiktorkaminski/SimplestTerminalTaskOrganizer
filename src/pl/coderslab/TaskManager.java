@@ -15,31 +15,28 @@ public class TaskManager {
     private static String[][] tasks;
 
     public static void main(String[] args) {
-        File tasksFile = new File("./src/pl/coderslab/tasks.csv");
+        File tasksFile = new File("tasks.csv");
         tasks = tasks(tasksFile);
         Scanner scn = new Scanner(System.in);
-        String userInput;
         menu();
-        userInput = scn.nextLine();
+        String userInput = scn.nextLine();
         while (!userInput.toLowerCase().equals("exit")) {
             switch (userInput.toLowerCase()) {
                 case "add":
                     tasks = Arrays.copyOf(tasks, tasks.length + 1);
                     tasks[tasks.length - 1] = addTask();
-                    menu();
                     break;
                 case "remove":
                     tasks = Arrays.copyOf(removeTask(), tasks.length - 1);
-                    menu();
                     break;
                 case "list":
                     listTasks();
-                    menu();
                     break;
                 default:
                     System.out.println("Please select a correct option.");
                     break;
             }
+            menu();
             userInput = scn.nextLine();
         }
         updateTasks(tasksFile);
@@ -64,25 +61,23 @@ public class TaskManager {
     }
 
     public static void listTasks() {
-        StringBuilder taskList = new StringBuilder();
         for (int i = 0; i < tasks.length; i++) {
-            taskList.append(i).append(" : ");
+            System.out.print(i + " : ");
             for (int j = 0; j < tasks[i].length; j++) {
-                taskList.append(tasks[i][j]).append(" ");
+                System.out.print(tasks[i][j] + " ");
             }
-            taskList.append("\n");
+            System.out.println();
         }
-        System.out.print(taskList.toString());
     }
 
     public static String[][] removeTask() {
         Scanner scn = new Scanner(System.in);
         System.out.println("Pleas select row number to remove:");
-        String input = scn.next();
+        String input = scn.nextLine();
 
         while (validateTaskNumber(input)) {
             System.out.println("Incorrect argument passed. Please give number greater or equal 0:");
-            input = scn.next();
+            input = scn.nextLine();
         }
 
         String[][] toReturn = ArrayUtils.remove(tasks, Integer.parseInt(input));
@@ -107,15 +102,11 @@ public class TaskManager {
     }
 
     public static void menu() {
-        String[] menu = {
-                ConsoleColors.BLUE + "Please select an option:" + ConsoleColors.RESET,
-                "add",
-                "remove",
-                "list",
-                "exit"};
-        for (String s : menu) {
-            System.out.println(s);
-        }
+        System.out.println(ConsoleColors.BLUE + "Please select an option:" + ConsoleColors.RESET);
+        System.out.println("add");
+        System.out.println("remove");
+        System.out.println("list");
+        System.out.println("exit");
     }
 
     public static String[][] tasks(File tasksFile) {
